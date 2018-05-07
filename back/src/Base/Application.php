@@ -8,6 +8,10 @@ use FastRoute\Dispatcher;
 use FastRoute\Dispatcher\GroupCountBased as GroupCountBased_Dispatcher;
 use FastRoute\RouteCollector;
 use FastRoute\RouteParser\Std as Std_RouteParser;
+use Psr\Http\Message\RequestInterface;
+use Psr\Http\Message\ResponseInterface;
+use Symfony\Bridge\PsrHttpMessage\Factory\DiactorosFactory;
+use Symfony\Bridge\PsrHttpMessage\Factory\HttpFoundationFactory;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -22,6 +26,14 @@ class Application
      * @var RouteCollector
      */
     private $routeCollector;
+    /**
+     * @var DiactorosFactory
+     */
+    private $psr7factory;
+    /**
+     * @var HttpFoundationFactory
+     */
+    private $httpFoundationFactory;
 
     /**
      * Application constructor.
@@ -33,6 +45,9 @@ class Application
 
         $this->request = Request::createFromGlobals();
         $this->routeCollector = new RouteCollector(new Std_RouteParser, new GroupCountBased());
+
+        $this->psr7factory = new DiactorosFactory();
+        $this->httpFoundationFactory = new HttpFoundationFactory();
     }
 
     public function get($route, $handler)
@@ -66,9 +81,9 @@ class Application
 
             case Dispatcher::FOUND:
                 $handler = $routeInfo[1];
-                $vars = $routeInfo[2];
+                $vars = $routeInfo[2] ?? [];
                 if (is_callable($handler)) {
-                    $handler($vars ?? []);
+                    $handler(...array_values($vars));
                 }
                 break;
         }
@@ -76,13 +91,14 @@ class Application
 
     private function handlerDefault($handler)
     {
-        return function() use ($handler) {
+        return function (...$args) use ($handler) {
 
-            $response = $this->callHandler($handler);
+            $psr7Response = $this->psr7factory->createResponse(new Response());
+            $psr7Request = $this->psr7factory->createRequest($this->request);
 
-            if(!($response instanceof Response)) {
-                $response = new Response($response);
-            }
+            $response = $this->callHandler($handler, $psr7Request, $psr7Response, ...$args);
+
+            $response = $this->httpFoundationFactory->createResponse($response);
             $response->send();
         };
     }
@@ -96,8 +112,8 @@ class Application
     {
         (new Response(implode([
             "NOT ALLOWED METHOD!",
-            "Try using: ".implode($allowedMethods, ', ')
-        ],"\n"), 405))->send();
+            "Try using: " . implode($allowedMethods, ', ')
+        ], "\n"), 405))->send();
     }
 
     /**
@@ -111,16 +127,17 @@ class Application
             $_SERVER['REQUEST_URI'] = str_replace($basePath, '', $_SERVER['REQUEST_URI']);
             $_SERVER['REQUEST_URI'] = str_replace('//', '/', $_SERVER['REQUEST_URI']);
         }
+
     }
 
-    private function callHandler($handler)
+    private function callHandler($handler, RequestInterface $request, ResponseInterface $response, ...$args)
     {
-        if(is_array($handler)) {
-            if(class_exists($handler[0])) {
+        if (is_array($handler)) {
+            if (class_exists($handler[0])) {
                 $handler[0] = new $handler[0];
             }
         }
 
-        return call_user_func($handler);
+        return call_user_func_array($handler, [$request, $response] + $args);
     }
 }
