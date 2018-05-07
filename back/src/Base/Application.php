@@ -77,7 +77,9 @@ class Application
     private function handlerDefault($handler)
     {
         return function() use ($handler) {
-            $response = $handler();
+
+            $response = $this->callHandler($handler);
+
             if(!($response instanceof Response)) {
                 $response = new Response($response);
             }
@@ -109,5 +111,16 @@ class Application
             $_SERVER['REQUEST_URI'] = str_replace($basePath, '', $_SERVER['REQUEST_URI']);
             $_SERVER['REQUEST_URI'] = str_replace('//', '/', $_SERVER['REQUEST_URI']);
         }
+    }
+
+    private function callHandler($handler)
+    {
+        if(is_array($handler)) {
+            if(class_exists($handler[0])) {
+                $handler[0] = new $handler[0];
+            }
+        }
+
+        return call_user_func($handler);
     }
 }
