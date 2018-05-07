@@ -2,3 +2,4 @@ vendor/
 .idea/
 .env
 composer.lock
+node_modules/
