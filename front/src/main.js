@@ -1,12 +1,30 @@
 import Vue from 'vue'
 import VueResource from 'vue-resource';
-import App from '@/App.vue'
+import VueRouter from 'vue-router';
+import VueMaterial from 'vue-material'
+
+import routes from "@/routes";
+
+import App from "@/components/App.vue";
+
 import 'vue-material/dist/vue-material.min.css'
+import 'vue-material/dist/theme/default.css' // This line here
 
-// Vue.use(BootstrapVue)
+
 Vue.use(VueResource);
+Vue.use(VueRouter);
+Vue.use(VueMaterial);
 
-new Vue({
-  el: '#app',
-  render: h => h(App)
+const router = new VueRouter({
+    routes: [
+        {
+            path: '*', component: App,
+            children: routes
+        }
+    ]
 });
+
+const app = new Vue({
+    router
+}).$mount('#app');
+
