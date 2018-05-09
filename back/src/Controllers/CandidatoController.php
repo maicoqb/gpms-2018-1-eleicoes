@@ -2,22 +2,32 @@
 
 namespace GMPS\Eleicoes_2018\Controllers;
 
+use GMPS\Eleicoes_2018\Services\CandidatoService;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 
 class CandidatoController
 {
+    /**
+     * @var CandidatoService
+     */
+    private $candidatoService;
 
-    public function search(RequestInterface $request, ResponseInterface $response)
+    /**
+     * CandidatoController constructor.
+     * @param CandidatoService $candidatoService
+     */
+    public function __construct(CandidatoService $candidatoService)
     {
-        $testObject = [
-            "key" => "value"
-        ];
-
-        $response->getBody()->write(json_encode($testObject));
-        $response->withHeader('Content-Type', 'application/json');
-
-        return $response;
+        $this->candidatoService = $candidatoService;
     }
 
+    public function top(RequestInterface $req, ResponseInterface $res, $top = 10)
+    {
+        $candidatos = $this->candidatoService->getTop(10);
+
+        $res->getBody()->write(json_encode($candidatos));
+
+        return $res->withHeader('Content-Type', 'application/json');
+    }
 }

@@ -16,7 +16,8 @@
     "nikic/fast-route": "^1.2",
     "vlucas/phpdotenv": "^2.4",
     "catfan/medoo": "v1.5.6",
-    "phar-io/version": "1.0.1"
+    "phar-io/version": "1.0.1",
+    "php-di/php-di": "6.0.2"
   },
   "autoload": {
     "psr-4": {

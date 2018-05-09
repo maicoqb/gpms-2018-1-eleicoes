@@ -2,18 +2,23 @@
 
 namespace GMPS\Eleicoes_2018\Base;
 
+use DI\Container;
+use DI\ContainerBuilder;
 use Dotenv\Dotenv;
 use FastRoute\DataGenerator\GroupCountBased as GroupCountBased;
 use FastRoute\Dispatcher;
 use FastRoute\Dispatcher\GroupCountBased as GroupCountBased_Dispatcher;
 use FastRoute\RouteCollector;
 use FastRoute\RouteParser\Std as Std_RouteParser;
+use Medoo\Medoo;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Symfony\Bridge\PsrHttpMessage\Factory\DiactorosFactory;
 use Symfony\Bridge\PsrHttpMessage\Factory\HttpFoundationFactory;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use function DI\autowire;
+use function DI\env;
 
 
 class Application
@@ -34,6 +39,10 @@ class Application
      * @var HttpFoundationFactory
      */
     private $httpFoundationFactory;
+    /**
+     * @var Container
+     */
+    private $container;
 
     /**
      * Application constructor.
@@ -48,6 +57,7 @@ class Application
 
         $this->psr7factory = new DiactorosFactory();
         $this->httpFoundationFactory = new HttpFoundationFactory();
+
     }
 
     public function get($route, $handler)
@@ -128,16 +138,30 @@ class Application
             $_SERVER['REQUEST_URI'] = str_replace('//', '/', $_SERVER['REQUEST_URI']);
         }
 
+        $containerBuilder = new ContainerBuilder();
+        $containerBuilder->addDefinitions([
+            Medoo::class => autowire()
+                ->constructorParameter('options', [
+                    'database_type' => env('DB_TYPE'),
+                    'database_name' => env('DB_NAME'),
+                    'server'        => env('DB_HOST'),
+                    'port'          => env('DB_PORT'),
+                    'username'      => env('DB_USER'),
+                    'password'      => env('DB_PASSWORD')
+                ])
+        ]);
+        $this->container = $containerBuilder->build();
+
     }
 
     private function callHandler($handler, RequestInterface $request, ResponseInterface $response, ...$args)
     {
         if (is_array($handler)) {
-            if (class_exists($handler[0])) {
-                $handler[0] = new $handler[0];
+            if( $this->container->has($handler[0]) ) {
+                $handler[0] = $this->container->get($handler[0]);
             }
         }
 
-        return call_user_func_array($handler, [$request, $response] + $args);
+        return call_user_func_array($handler, array_merge([$request, $response], $args));
     }
 }
