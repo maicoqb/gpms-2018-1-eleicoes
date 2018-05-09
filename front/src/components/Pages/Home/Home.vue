@@ -4,15 +4,7 @@
 
             <info-eleicoes class="info-card"></info-eleicoes>
 
-            <md-card class="info-card md-layout-item md-size-50 md-small-size-100 md-xsmall-size-100">
-                <md-card-header>
-                    <div class="md-title">Candidatos</div>
-                </md-card-header>
-
-                <md-card-content>
-                    cards candidatos
-                </md-card-content>
-            </md-card>
+            <info-candidatos class="info-card"></info-candidatos>
 
             <div class="md-layout-item md-size-100">
                 noticias
@@ -23,14 +15,15 @@
 
 <script>
     import InfoEleicoes from "./InfoEleicoes.vue";
+    import InfoCandidatos from './InfoCandidatos.vue';
     //import Noticias from '@components/Pages/Home/Noticias.vue';
-    //import InfoCandidatos from '@components/Pages/Home/InfoCandidatos.vue';
 
     export default {
         name: 'pages-home',
 
         components: {
-            'info-eleicoes': InfoEleicoes
+            'info-eleicoes': InfoEleicoes,
+            'info-candidatos': InfoCandidatos
         }
     }
 </script>

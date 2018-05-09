@@ -16,7 +16,7 @@
         name: 'app',
 
         components: {
-            "layout-header": Header,
+            "layout-header": Header
         }
     }
 </script>

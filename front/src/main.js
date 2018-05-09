@@ -8,8 +8,7 @@ import routes from "@/routes";
 import App from "@/components/App.vue";
 
 import 'vue-material/dist/vue-material.min.css'
-import 'vue-material/dist/theme/default.css' // This line here
-
+import 'vue-material/dist/theme/default.css'
 
 Vue.use(VueResource);
 Vue.use(VueRouter);
