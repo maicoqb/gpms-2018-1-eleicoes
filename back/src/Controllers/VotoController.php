@@ -37,12 +37,18 @@ class VotoController
         return $response->withStatus(204, "Voto incluído");
     }
 
-    public function topRated(RequestInterface $req, ResponseInterface $res, $limit=100, $offset=0)
+    public function topRated(RequestInterface $request, ResponseInterface $response)
     {
+        $inputData = [];
+        parse_str($request->getUri()->getQuery(), $inputData);
+
+        $limit = $inputData['limit']; unset($inputData['limit']);
+        $offset = $inputData['offset']; unset($inputData['offset']);
+
         $resultado = $this->votoService->getTopRated($limit, $offset);
 
-        $res->getBody()->write(json_encode($resultado));
+        $response->getBody()->write(json_encode($resultado));
 
-        return $res->withHeader('Content-Type', 'application/json');
+        return $response->withHeader('Content-Type', 'application/json');
     }
 }

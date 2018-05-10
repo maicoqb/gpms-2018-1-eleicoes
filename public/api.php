@@ -14,6 +14,6 @@ $api->get('/candidatos/top/{top}', [CandidatoController::class, 'top']);
 $api->get('/noticias/recent/{limit}/{offset}', [NoticiaController::class, 'recent']);
 
 $api->post('/votos', [VotoController::class, 'createVoto']);
-$api->get('/votos/top-rated/{limit}/{offset}', [VotoController::class, 'topRated']);
+$api->get('/votos/top-rated{qs}', [VotoController::class, 'topRated']);
 
 $api->run();

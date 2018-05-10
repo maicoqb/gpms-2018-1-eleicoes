@@ -15,9 +15,9 @@ export default class VotoResource {
             .then((response) => response.body)
     }
 
-    static getTopRated(limit, offset) {
-        const url = `/top-rated/${limit}/${offset}`;
-        return Vue.http.get(parseUrl(url))
+    static getTopRated(filtro) {
+        const url = `/top-rated`;
+        return Vue.http.get(parseUrl(url), {params:filtro})
             .then((response) => response.body)
             .catch(err => console.error(err));
     }

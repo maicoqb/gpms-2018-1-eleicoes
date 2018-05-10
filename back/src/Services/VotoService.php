@@ -39,8 +39,14 @@ class VotoService
         return $this->database->insert(self::VOTO_TABLE, $data);
     }
 
-    public function getTopRated($limit, $offset)
+    public function getTopRated($limit, $offset, $params=[])
     {
+        $where = ['1=1'];
+        foreach($params as $k => $v) {
+            if($v) $where[] = "$k => '$v'";
+        }
+        $where = implode(' AND ', $where);
+
         $sqlTopRated = <<<SQL
 select
   candidato.*,
@@ -52,6 +58,7 @@ join
     cargo,
     count(titulo_eleitor) as votos
   from voto
+  WHERE $where
   GROUP BY numero_candidato, cargo
   ) x
   on candidato.numero = x.numero_candidato
