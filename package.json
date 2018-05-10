@@ -15,7 +15,9 @@
     "vue": "^2.5.3",
     "vue-material": "^1.0.0-beta-8",
     "vue-resource": "^1.5.0",
-    "vue-router": "^3.0.1"
+    "vue-router": "^3.0.1",
+    "vue-the-mask": "^0.11.1",
+    "vue-toasted": "^1.1.24"
   },
   "devDependencies": {
     "babel-core": "^6.26.0",

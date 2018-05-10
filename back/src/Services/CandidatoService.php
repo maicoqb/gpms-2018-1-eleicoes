@@ -24,7 +24,6 @@ class CandidatoService
     private $database;
 
     /**
-     * CandidatoService constructor.
      * @param Medoo $database
      */
     public function __construct(Medoo $database)

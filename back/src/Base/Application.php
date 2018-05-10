@@ -69,6 +69,7 @@ class Application
     public function post($route, $handler)
     {
         $this->routeCollector->post($route, $this->handlerDefault($handler));
+        $this->options($route, ['POST']);
     }
 
     private function options($route, $allowedMethods)

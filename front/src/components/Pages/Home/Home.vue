@@ -1,5 +1,5 @@
 <template>
-    <md-card>
+    <md-card class="info-card md-layout-item md-size-100">
         <md-card-content class="md-layout">
             <info-eleicoes class="info-card md-size-50 md-small-size-100 md-xsmall-size-100"></info-eleicoes>
             <info-candidatos class="info-card md-size-50 md-small-size-100 md-xsmall-size-100"></info-candidatos>
@@ -24,7 +24,7 @@
     }
 </script>
 
-<style>
+<style lang="scss" scoped>
     .md-card.info-card {
         text-align: justify;
         border-color: transparent;
