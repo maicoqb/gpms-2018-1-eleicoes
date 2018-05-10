@@ -59,7 +59,6 @@
                         this.noticias = this.noticias.concat(noticias);
                     });
             }
-
         }
     }
 </script>
