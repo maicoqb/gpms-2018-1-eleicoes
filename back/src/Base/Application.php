@@ -63,11 +63,21 @@ class Application
     public function get($route, $handler)
     {
         $this->routeCollector->get($route, $this->handlerDefault($handler));
+        $this->options($route, ['GET']);
     }
 
     public function post($route, $handler)
     {
         $this->routeCollector->post($route, $this->handlerDefault($handler));
+    }
+
+    private function options($route, $allowedMethods)
+    {
+        $this->routeCollector->addRoute(
+            'OPTIONS',
+            $route,
+            $this->handlerOptions($route, $allowedMethods)
+        );
     }
 
     public function run()
@@ -106,6 +116,8 @@ class Application
             $psr7Response = $this->psr7factory->createResponse(new Response());
             $psr7Request = $this->psr7factory->createRequest($this->request);
 
+            $psr7Response = $this->addCORS($psr7Response);
+
             $response = $this->callHandler($handler, $psr7Request, $psr7Response, ...$args);
 
             $response = $this->httpFoundationFactory->createResponse($response);
@@ -124,6 +136,21 @@ class Application
             "NOT ALLOWED METHOD!",
             "Try using: " . implode($allowedMethods, ', ')
         ], "\n"), 405))->send();
+    }
+
+    private function handlerOptions($route, $allowedMethods)
+    {
+        $allowedMethods = array_merge($allowedMethods, ['OPTIONS']);
+
+        return function (...$args) use ($allowedMethods) {
+            $psr7Response = $this->psr7factory->createResponse(new Response());
+
+            $psr7Response = $this->addCORS($psr7Response)
+                ->withHeader('Access-Control-Allow-Methods', implode(', ', $allowedMethods));
+
+            $response = $this->httpFoundationFactory->createResponse($psr7Response);
+            $response->send();
+        };
     }
 
     /**
@@ -163,5 +190,12 @@ class Application
         }
 
         return call_user_func_array($handler, array_merge([$request, $response], $args));
+    }
+
+    private function addCORS(ResponseInterface $psr7Response)
+    {
+        return $psr7Response
+            ->withHeader('Access-Control-Allow-Origin', '*')
+            ->withAddedHeader('Access-Control-Allow-Headers', 'Content-Type');
     }
 }

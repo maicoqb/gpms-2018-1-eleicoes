@@ -1,39 +1,33 @@
 <template>
-    <b-card no-body
-            :img-src="candidato.foto" :img-alt="candidato.nome" img-top
-            :header="candidato.nome" :header-class="$style.cardHeader"
-            :class="$style.cardCandidato"
-        >
-        <b-list-group flush :class="$style.cardBody">
-            <b-list-group-item :class="$style.cardBody_cargo">{{candidato.cargo}}</b-list-group-item>
-            <b-list-group-item :class="$style.cardBody_partido">{{candidato.partido}}</b-list-group-item>
-        </b-list-group>
-    </b-card>
+    <md-card class="card-candidato md-layout-item md-large-size-45 md-medium-size-100 md-small-size-45 md-xsmall-size-100">
+        <md-card-header>
+            <md-card-header-text>
+                <div class="md-title">{{this.candidato.nome_candidato}}</div>
+                <div class="md-subhead">{{this.candidato.nome_real}}</div>
+            </md-card-header-text>
+
+            <md-card-media>
+                <img :src="imgPath" alt="Avatar">
+            </md-card-media>
+        </md-card-header>
+    </md-card>
 </template>
 
 <script>
-export default {
-  name: 'pages-partial-info-candidatos-card',
-  props: {
-      candidato: {
-          type: Object,
-          required: true
-      }
-  }
-}
+    export default {
+        name: 'pages-partial-info-candidatos-card',
+        props: {
+            candidato: {
+                type: Object,
+                required: true
+            }
+        },
+        computed: {
+            imgPath() {
+                const normalizedId = (this.candidato.id % 99) + 1;
+                const gender = (this.candidato.id - 100) > 0 ? 'men' : 'women' ;
+                return `https://randomuser.me/api/portraits/${gender}/${normalizedId}.jpg`;
+            }
+        }
+    }
 </script>
-
-<style module>
-.cardCandidato {
-    margin-bottom: 10px;
-}
-.cardHeader {
-    padding: 5px 10px;
-}
-.cardBody {
-    padding: 0;
-}
-.cardBody_cargo, .cardBody_partido {
-    padding: 5px 10px;
-}
-</style>

@@ -13,7 +13,7 @@
                 dolor non eros malesuada, in pretium orci tempus. Sed non turpis ut nunc posuere dapibus et vel tellu.
                 Nunc et ultricies justo.
             </p>
-            <p v-show="isExpanded">
+            <p>
                 Donec vestibulum a velit et eleifend. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
                 Mauris tincidunt metus turpis, id suscipit arcu ultrices nec. Cras pharetra erat at sapien tincidunt
                 accumsan. Nullam elementum luctus dictum. In arcu mi, hendrerit eget dapibus in, maximus eget ipsum.
@@ -25,22 +25,11 @@
             </p>
         </md-card-content>
 
-        <md-card-actions>
-            <md-button @click="isExpanded = true" v-show="!isExpanded">Ver Mais</md-button>
-            <md-button @click="isExpanded = false" v-show="isExpanded">Ver Menos</md-button>
-        </md-card-actions>
     </md-card>
 </template>
 
 <script>
-
     export default {
-        name: "page-home_info-eleicoes",
-        data() {
-            return {
-                isExpanded: false
-            }
-        }
+        name: "page-home_info-eleicoes"
     };
-
 </script>

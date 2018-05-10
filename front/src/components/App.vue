@@ -30,12 +30,6 @@
         margin-left: auto;
     }
 
-    @media (min-width: 600px) {
-        .page-container {
-            max-width: 540px;
-        }
-    }
-
     @media (min-width: 768px) {
         .page-container {
             max-width: 720px;
@@ -48,7 +42,7 @@
         }
     }
 
-    @media (min-width: 1200px) {
+    @media (min-width: 1266px) {
         .page-container {
             max-width: 1140px;
         }

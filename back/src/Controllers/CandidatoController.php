@@ -24,7 +24,7 @@ class CandidatoController
 
     public function top(RequestInterface $req, ResponseInterface $res, $top = 10)
     {
-        $candidatos = $this->candidatoService->getTop(10);
+        $candidatos = $this->candidatoService->getTop($top);
 
         $res->getBody()->write(json_encode($candidatos));
 
