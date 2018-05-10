@@ -15,7 +15,7 @@
 
 <script>
     export default {
-        name: 'pages-partial-info-candidatos-card',
+        name: 'pages-home_info-candidatos_card-candidato',
         props: {
             candidato: {
                 type: Object,

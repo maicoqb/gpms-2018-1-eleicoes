@@ -1,5 +1,5 @@
 <template>
-    <md-card class="md-layout-item md-size-50 md-small-size-100 md-xsmall-size-100">
+    <md-card class="md-layout-item">
         <md-card-header>
             <div class="md-title">Informações Gerais</div>
         </md-card-header>
