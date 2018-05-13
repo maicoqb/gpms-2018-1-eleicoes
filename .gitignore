@@ -1,6 +1,8 @@
 vendor/
 .idea/
 .env
+.env.*
+!.env.stub
 composer.lock
 node_modules/
 .version
