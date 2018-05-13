@@ -15,5 +15,7 @@ $api->get('/noticias/recent/{limit}/{offset}', [NoticiaController::class, 'recen
 
 $api->post('/votos', [VotoController::class, 'createVoto']);
 $api->get('/votos/top-rated{qs}', [VotoController::class, 'topRated']);
+$api->get('/votos/cargos', [VotoController::class, 'getCargos']);
+$api->get('/votos/regioes', [VotoController::class, 'getRegioes']);
 
 $api->run();

@@ -42,13 +42,29 @@ class VotoController
         $inputData = [];
         parse_str($request->getUri()->getQuery(), $inputData);
 
-        $limit = $inputData['limit']; unset($inputData['limit']);
-        $offset = $inputData['offset']; unset($inputData['offset']);
+        $limit = $inputData['limit'];
+        unset($inputData['limit']);
+        $offset = $inputData['offset'];
+        unset($inputData['offset']);
 
         $resultado = $this->votoService->getTopRated($limit, $offset);
 
         $response->getBody()->write(json_encode($resultado));
 
+        return $response->withHeader('Content-Type', 'application/json');
+    }
+
+    public function getRegioes(RequestInterface $request, ResponseInterface $response)
+    {
+        $regioes = $this->votoService->getRegioes();
+        $response->getBody()->write(json_encode($regioes));
+        return $response->withHeader('Content-Type', 'application/json');
+    }
+
+    public function getCargos(RequestInterface $request, ResponseInterface $response)
+    {
+        $cargos = $this->votoService->getCargos();
+        $response->getBody()->write(json_encode($cargos));
         return $response->withHeader('Content-Type', 'application/json');
     }
 }

@@ -22,4 +22,18 @@ export default class VotoResource {
             .catch(err => console.error(err));
     }
 
+    static getRegioes() {
+        const url = `/regioes`;
+        return Vue.http.get(parseUrl(url))
+            .then((response) => response.body)
+            .catch(err => console.error(err));
+    }
+
+    static getCargos() {
+        const url = `/cargos`;
+        return Vue.http.get(parseUrl(url))
+            .then((response) => response.body)
+            .catch(err => console.error(err));
+    }
+
 }

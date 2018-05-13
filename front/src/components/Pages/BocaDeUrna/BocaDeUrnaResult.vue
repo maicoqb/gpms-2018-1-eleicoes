@@ -11,10 +11,10 @@
                     <md-select name="cargo" id="cargo" v-model="filtro.cargo" md-dense :disabled="sending">
                         <md-option></md-option>
                         <md-option
-                                v-for="(cargo, key) in this.input.cargos"
-                                :key="key"
-                                :value="key"
-                        >{{cargo}}
+                                v-for="cargo in this.input.cargos"
+                                :key="cargo.cargo"
+                                :value="cargo.cargo"
+                        >{{cargo.cargo}}
                         </md-option>
                     </md-select>
                 </md-field>
@@ -24,10 +24,10 @@
                     <md-select name="regiao" id="regiao" v-model="filtro.regiao" md-dense :disabled="sending">
                         <md-option></md-option>
                         <md-option
-                                v-for="(regiao, key) in this.input.regioes"
-                                :key="key"
-                                :value="key"
-                        >{{regiao}}
+                                v-for="regiao in this.input.regioes"
+                                :key="regiao.regiao"
+                                :value="regiao.regiao"
+                        >{{regiao.regiao}}
                         </md-option>
                     </md-select>
                 </md-field>
@@ -86,22 +86,59 @@
             }
         },
 
+        watch: {
+            'filtro.cargo': function() {
+                this.carregarMaisVotados(false);
+            },
+            'filtro.regiao': function() {
+                this.carregarMaisVotados(false);
+            },
+        },
+
         created() {
+            this.carregarRegioes();
+            this.carregarCargos();
             this.carregarMaisVotados();
         },
+
         methods: {
+            carregarRegioes() {
+                this.sending = true;
+                VotoResource
+                    .getRegioes()
+                    .then((regioes) => {
+                        this.input.regioes = regioes;
+                    })
+                    .finally(() => this.sending = false);
+            },
+
+            carregarCargos() {
+                this.sending = true;
+                VotoResource
+                    .getCargos()
+                    .then((cargos) => {
+                        this.input.cargos = cargos;
+                    })
+                    .finally(() => this.sending = false);
+            }
+            ,
+
             carregarMaisResultados: _.debounce(function() {
                 this.filtro.offset += 1;
                 this.filtro.limit = (this.filtro.offset+1) * this.perPage;
 
                 this.carregarMaisVotados();
             }),
-            carregarMaisVotados() {
+            carregarMaisVotados(append=true) {
                 this.sending = true;
                 VotoResource
                     .getTopRated(this.filtro)
                     .then((candidatos) => {
-                        this.candidatos = this.candidatos.concat(candidatos);
+                        if(!append) {
+                            this.candidatos = candidatos
+                        } else {
+                            this.candidatos = this.candidatos.concat(candidatos);
+                        }
                     })
                     .finally(() => this.sending = false);
             }

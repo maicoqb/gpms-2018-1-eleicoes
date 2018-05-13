@@ -70,4 +70,54 @@ SQL;
         return $this->database->query($sqlTopRated)->fetchAll(PDO::FETCH_ASSOC);
     }
 
+    public function getRegioes()
+    {
+        $sqlRegioes = <<<SQL
+select DISTINCT (regiao) as regiao
+from (
+    select
+      candidato.*,
+      x.votos
+    from candidato
+    join
+      (select
+        numero_candidato,
+        cargo,
+        count(titulo_eleitor) as votos
+      from voto
+      GROUP BY numero_candidato, cargo
+      ) x
+      on candidato.numero = x.numero_candidato
+        and candidato.cargo = x.cargo
+) x
+SQL;
+
+        return $this->database->query($sqlRegioes)->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function getCargos()
+    {
+        $sqlRegioes = <<<SQL
+select DISTINCT (cargo) as cargo
+from (
+    select
+      candidato.*,
+      x.votos
+    from candidato
+    join
+      (select
+        numero_candidato,
+        cargo,
+        count(titulo_eleitor) as votos
+      from voto
+      GROUP BY numero_candidato, cargo
+      ) x
+      on candidato.numero = x.numero_candidato
+        and candidato.cargo = x.cargo
+) x
+SQL;
+
+        return $this->database->query($sqlRegioes)->fetchAll(PDO::FETCH_ASSOC);
+    }
+
 }
