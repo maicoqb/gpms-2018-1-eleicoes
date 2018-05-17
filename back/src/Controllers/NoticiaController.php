@@ -22,9 +22,15 @@ class NoticiaController
         $this->noticiaService = $noticiaService;
     }
 
-    public function recent(RequestInterface $req, ResponseInterface $res, $limit=100, $offset=0)
+    public function latest(RequestInterface $req, ResponseInterface $res)
     {
-        $noticias = $this->noticiaService->getRecent($limit, $offset);
+        $inputData = [];
+        parse_str($req->getUri()->getQuery(), $inputData);
+
+        $limit = $inputData['limit'] ?? 10;
+        $offset = $inputData['offset'] ?? 0;
+
+        $noticias = $this->noticiaService->getLatest($limit, $offset);
 
         $res->getBody()->write(json_encode($noticias));
 

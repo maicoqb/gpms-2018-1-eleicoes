@@ -85,9 +85,12 @@ class Application
     {
         $dispatcher = new GroupCountBased_Dispatcher($this->routeCollector->getData());
 
+        $psr7Request = $this->psr7factory->createRequest($this->request);
+        $uri = $psr7Request->getUri()->getPath();
+
         $routeInfo = $dispatcher->dispatch(
-            $this->request->getMethod(),
-            $this->request->getRequestUri()
+            $psr7Request->getMethod(),
+            $uri
         );
 
         switch ($routeInfo[0]) {
@@ -161,7 +164,15 @@ class Application
     {
         (new Dotenv($workDir))->load();
 
-        if ($basePath = getenv("BASE_PATH")) {
+        if(getenv("FROM_QS")) {
+            $_SERVER['REQUEST_URI'] = $_GET['p'];
+            unset($_GET['p']);
+            $_SERVER["QUERY_STRING"] = http_build_query($_GET);
+            if( $_SERVER["QUERY_STRING"] ) {
+                $_SERVER['REQUEST_URI'] .= '?'.$_SERVER["QUERY_STRING"];
+            }
+        }
+        else if ($basePath = getenv("BASE_PATH")) {
             $_SERVER['REQUEST_URI'] = str_replace($basePath, '', $_SERVER['REQUEST_URI']);
             $_SERVER['REQUEST_URI'] = str_replace('//', '/', $_SERVER['REQUEST_URI']);
         }

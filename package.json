@@ -1,11 +1,11 @@
 {
   "name": "maicoqb_gpms-2018-1-eleicoes",
   "description": "Aplicação cliente do nosso sistema para as eleições 2018",
-  "version": "1.0.0",
+  "version": "0.3.0",
   "author": "Maico Borges <maicoqb@gmail.com>",
   "private": true,
   "scripts": {
-    "dev": "cross-env NODE_ENV=development webpack-dev-server --hot",
+    "dev": "cross-env NODE_ENV=development webpack --hot --hide-modules",
     "build": "cross-env NODE_ENV=production webpack --progress --hide-modules"
   },
   "dependencies": {

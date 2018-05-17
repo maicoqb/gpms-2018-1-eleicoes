@@ -29,7 +29,7 @@ class NoticiaService
         $this->database = $database;
     }
 
-    public function getRecent($limit, $offset)
+    public function getLatest($limit, $offset)
     {
         return $this->database->select(
             self::NOTICIA_TABLE,

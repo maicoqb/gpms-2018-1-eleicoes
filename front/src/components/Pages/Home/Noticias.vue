@@ -27,7 +27,7 @@
 <script>
     import _ from 'lodash';
     import CardNoticia from './Noticias/CardNoticia.vue';
-    import NoticiaResource from '@/resources/NoticiaResource';
+    import NoticiaResource from '@/resources/NoticiaResource.js';
 
     export default {
         name: "pages-home_noticias",
@@ -54,7 +54,10 @@
             }),
             loadNoticias() {
                 NoticiaResource
-                    .getRecent(this.limit, this.offset)
+                    .getRecent({
+                        limit: this.limit,
+                        offset: this.offset
+                    })
                     .then((noticias) => {
                         this.noticias = this.noticias.concat(noticias);
                     });

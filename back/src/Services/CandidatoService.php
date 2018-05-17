@@ -31,12 +31,15 @@ class CandidatoService
         $this->database = $database;
     }
 
-    public function getTop($top)
+    public function getRandom($top)
     {
         return $this->database->select(
             self::CANDIDATO_TABLE,
             self::CANDIDATO_COLUMNS,
-            [ 'LIMIT' => [0, $top] ]
+            [
+                'ORDER' => Medoo::raw('RAND()'),
+                'LIMIT' => [0, $top]
+            ]
         );
     }
 }

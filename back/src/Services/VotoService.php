@@ -39,7 +39,7 @@ class VotoService
         return $this->database->insert(self::VOTO_TABLE, $data);
     }
 
-    public function getTopRated($limit, $offset, $params=[])
+    public function getTopRated($limit=10, $offset=0, $params=[])
     {
         $where = ['1=1'];
         foreach($params as $k => $v) {

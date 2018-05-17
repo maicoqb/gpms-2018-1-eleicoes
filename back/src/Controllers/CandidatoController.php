@@ -22,9 +22,14 @@ class CandidatoController
         $this->candidatoService = $candidatoService;
     }
 
-    public function top(RequestInterface $req, ResponseInterface $res, $top = 10)
+    public function random(RequestInterface $req, ResponseInterface $res)
     {
-        $candidatos = $this->candidatoService->getTop($top);
+        $inputData = [];
+        parse_str($req->getUri()->getQuery(), $inputData);
+
+        $amount = $inputData['amount'] ?? 10;
+
+        $candidatos = $this->candidatoService->getRandom($amount);
 
         $res->getBody()->write(json_encode($candidatos));
 

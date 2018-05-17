@@ -42,12 +42,12 @@ class VotoController
         $inputData = [];
         parse_str($request->getUri()->getQuery(), $inputData);
 
-        $limit = $inputData['limit'];
+        $limit = $inputData['limit'] ?? 10;
         unset($inputData['limit']);
-        $offset = $inputData['offset'];
+        $offset = $inputData['offset'] ?? 0;
         unset($inputData['offset']);
 
-        $resultado = $this->votoService->getTopRated($limit, $offset);
+        $resultado = $this->votoService->getTopRated($limit, $offset, $inputData);
 
         $response->getBody()->write(json_encode($resultado));
 
